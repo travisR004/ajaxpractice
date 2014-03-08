@@ -1,12 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<style>
+		div.friend-buttons.can-unfriend button.friend-button {
+			display: none;
+		}
+
+		div.friend-buttons.can-friend button.unfriend-button {
+			display: none;
+		}
+	</style>
   <title>SecretShareAjax</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+
+<% if flash[:errors] %>
+<%= flash[:errors].join(", ") %>
+<% end %>
 
 <% if signed_in? %>
   <ul>

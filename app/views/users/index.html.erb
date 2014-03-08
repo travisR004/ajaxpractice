@@ -1,0 +1,70 @@
+
+
+<% friends = current_user.friends %>
+<% friendships = current_user.friendships %>
+<ul>
+	<% @users.each do |user| %>
+		<li>
+			<% friendship_id = false %>
+			<%= user.username %>
+			<% if  friends.include?(user) %>
+			<% friendship = friendships.find { |friendship| friendship.in_friend_id == user.id } %>
+				<% friendship_id = friendship.id %>
+			<% end %>
+
+			<div class="friend-buttons
+				<%= friendship_id ? 'can-unfriend' : 'can-friend'%>"
+			>
+				<button type="button"
+					class="friend-button"
+					data-user-id="<%= user.id %>"
+				>Friend</button>
+
+				<button type="button"
+					class="unfriend-button"
+					data-id="<%= friendship_id %>"
+				>UnFriend</button>
+			</div>
+		</li>
+	<% end %>
+</ul>
+
+
+<script>
+	$(function(){
+		$('.friend-buttons').on("click", ".friend-button", function(event){
+			event.preventDefault();
+			$(this).attr("disabled", true);
+			$(this).text("Friending...");
+			var that = this;
+			$.ajax({
+				url: 'users/' + $(this).data('user-id') + '/friendships',
+				type: "POST",
+				success: function() {
+					toggleFriendButtons(that);
+				}
+			})
+		});
+
+		$('.friend-buttons').on("click", ".unfriend-button", function(event){
+			event.preventDefault();
+			$(this).attr("disabled", true);
+			$(this).text("Unfriending...");
+			var that = this;
+			$.ajax({
+				url: 'friendships/' + $(this).data('id'),
+				type: "DELETE",
+				success: function() {
+					toggleFriendButtons(that);
+				}
+			})
+		});
+	});
+
+	var toggleFriendButtons = function(that){
+		var $parent = $(that).parent();
+		$parent.toggleClass('can-unfriend');
+		$parent.toggleClass('can-friend');
+	}
+
+</script>
