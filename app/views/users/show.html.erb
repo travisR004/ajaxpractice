@@ -29,6 +29,10 @@
 			success: function() {
 				$('ul#secrets').append('<li>' + formData.secret.title + '</li>');
 				$('#title').val("");
+				$('.error').html("");
+			},
+			error: function(){
+				$('#secret-form').append('<div class="error" style="color: red">You Fucked Up</div>')
 			}
 		})
 	});
